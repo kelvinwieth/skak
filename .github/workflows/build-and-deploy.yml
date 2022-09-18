@@ -19,14 +19,15 @@ jobs:
       env:
         LOCAL: ${{ github.event.repository.name }}
         REMOTE: ${{ github.event.repository.html_url }}.git
+        BOT_TOKEN: ${{ secrets.BOT_TOKEN }}
       with:
         host: $HOST
         username: $USERNAME
         key: $SSH_KEY
-        envs: LOCAL,REMOTE
+        envs: LOCAL,REMOTE,BOT_TOKEN
         script_stop: true
         script: |
           if [ -d $LOCAL/.git ]; then git -C $LOCAL reset --hard HEAD~; git -C $LOCAL pull; else rm -rf $LOCAL; git clone $REMOTE; fi
           chmod +x -R $LOCAL/scripts
           $LOCAL/scripts/build.sh
-          $LOCAL/scripts/run.sh
+          $LOCAL/scripts/run.sh $BOT_TOKEN
