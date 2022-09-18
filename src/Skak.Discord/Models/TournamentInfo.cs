@@ -1,4 +1,5 @@
 using Skak.Discord.Models.Dtos;
+using Skak.Discord.Utils;
 
 namespace Skak.Discord.Models
 {
@@ -6,11 +7,13 @@ namespace Skak.Discord.Models
     {
         public static TournamentInfo FromLichess(ILichessTournament tournament)
         {
+			var type = tournament.Type.ToLichessResource();
+			
             return new TournamentInfo
             {
                 Name = tournament.Name,
                 StartsAt = tournament.StartsAt,
-                Url = $"https://lichess.org/tournament/{tournament.Id}",
+                Url = $"https://lichess.org/{type}/{tournament.Id}",
             };
         }
 

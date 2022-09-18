@@ -1,4 +1,5 @@
 using Newtonsoft.Json;
+using Skak.Discord.Models.Enums;
 
 namespace Skak.Discord.Models.Dtos
 {
@@ -15,5 +16,8 @@ namespace Skak.Discord.Models.Dtos
 
         [JsonProperty("isFinished")]
         public bool IsFinished { get; set; }
+
+		[JsonIgnore]
+		public TournamentType Type => TournamentType.Arena;
     }
 }

@@ -1,3 +1,5 @@
+using Skak.Discord.Models.Enums;
+
 namespace Skak.Discord.Models.Dtos
 {
     public interface ILichessTournament
@@ -6,5 +8,6 @@ namespace Skak.Discord.Models.Dtos
         string Name { get; }
         DateTime StartsAt { get; }
         bool IsFinished { get; }
+		TournamentType Type { get; }
     }
 }
