@@ -1,2 +1,2 @@
 #!/bin/sh
-echo building...
+dotnet publish ~/skak/src/Skak.Discord/Skak.Discord.csproj -c Release -o ~/skak/app

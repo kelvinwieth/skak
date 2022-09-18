@@ -1,3 +1,5 @@
+name: 🚀 Deploy
+
 on:
   push:
     branches: [ "master" ]
@@ -9,9 +11,8 @@ env:
 
 jobs:
   deploy:
-    name: 🚀 Deploy
+    name: Deploy with SSH
     runs-on: ubuntu-latest
-
     steps:
     - name: Pull, build and run project
       uses: appleboy/ssh-action@v0.1.5
@@ -25,6 +26,7 @@ jobs:
         envs: LOCAL,REMOTE
         script_stop: true
         script: |
+          cd ~
           if [ -d $LOCAL/.git ]; then git -C $LOCAL reset --hard HEAD~; git -C $LOCAL pull; else rm -rf $LOCAL; git clone $REMOTE; fi
           chmod +x -R $LOCAL/scripts
           $LOCAL/scripts/build.sh
