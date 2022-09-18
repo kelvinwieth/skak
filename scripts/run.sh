@@ -1,2 +1,2 @@
 #!/bin/bash
-dotnet run ~/skak/app/Skak.Discord.dll
+docker run -d skak
