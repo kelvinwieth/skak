@@ -30,4 +30,5 @@ jobs:
           if [ -d $LOCAL/.git ]; then git -C $LOCAL reset --hard HEAD~; git -C $LOCAL pull; else rm -rf $LOCAL; git clone $REMOTE; fi
           chmod +x -R $LOCAL/scripts
           $LOCAL/scripts/build.sh
-          $LOCAL/scripts/run.sh $BOT_TOKEN
+          export SKAK_TOKEN=$BOT_TOKEN
+          $LOCAL/scripts/run.sh
