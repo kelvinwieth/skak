@@ -18,7 +18,7 @@ jobs:
       uses: appleboy/ssh-action@v0.1.5
       env:
         LOCAL: ${{ github.event.repository.name }}
-        REMOTE: ${{ github.repositoryUrl }}
+        REMOTE: ${{ github.event.repository.html_url }}.git
       with:
         host: $HOST
         username: $USERNAME
