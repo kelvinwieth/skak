@@ -5,9 +5,9 @@ on:
     branches: [ "master" ]
 
 env:
-  HOST: ${{ secrets.REMOTE_HOST }}
-  USERNAME: ${{ secrets.REMOTE_USER }}
-  SSH_KEY: ${{ secrets.SERVER_SSH_KEY }}
+  HOST: ${{ secrets.DEV_REMOTE_HOST }}
+  USERNAME: ${{ secrets.DEV_REMOTE_USER }}
+  SSH_KEY: ${{ secrets.DEV_SERVER_SSH_KEY }}
 
 jobs:
   deploy:
@@ -19,7 +19,7 @@ jobs:
       env:
         LOCAL: ${{ github.event.repository.name }}
         REMOTE: ${{ github.event.repository.html_url }}.git
-        BOT_TOKEN: ${{ secrets.BOT_TOKEN }}
+        BOT_TOKEN: ${{ secrets.PROD_BOT_TOKEN }}
       with:
         host: $HOST
         username: $USERNAME
