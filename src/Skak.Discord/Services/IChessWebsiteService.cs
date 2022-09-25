@@ -6,5 +6,7 @@ namespace Skak.Discord.Services
     public interface IChessWebsiteService
     {
         Task<TournamentInfo> GetTournamentAsync(string url, TournamentType type);
+
+        Task<TournamentInfo> GetLastTournamentAsync();
     }
 }

@@ -23,8 +23,6 @@ namespace Skak.Discord.Commands
         public async Task PostPodiumAsync(
             InteractionContext context,
             [Option("canal", "Canal onde a mensagem será enviada")] DiscordChannel channel,
-            [Option("tipo", "Tipo de torneio: Arena ou Suíço")] TournamentType type,
-            [Option("torneio", "Link do torneio no Lichess")] string tournamentUrl,
             [Option("imagem", "Link da imagem a ser enviada")] string imageUrl,
             [Option("campeao", "Membro campeão do torneio")] DiscordUser firstPlace,
             [Option("vice", "Membro vice-campeão do torneio")] DiscordUser secondPlace,
@@ -35,7 +33,7 @@ namespace Skak.Discord.Commands
             try
             {
                 // Get tournament info on Lichess
-                var tournamentInfo = await _chessService.GetTournamentAsync(tournamentUrl, type);
+                var tournamentInfo = await _chessService.GetLastTournamentAsync();
 
                 // Build embed
                 var embed = EmbedBuilder.TournamentPodium(

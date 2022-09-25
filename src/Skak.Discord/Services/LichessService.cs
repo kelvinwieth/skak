@@ -14,7 +14,7 @@ namespace Skak.Discord.Services
             _lichessClient = lichessClient;
         }
 
-        public async Task<TournamentInfo> GetTournamentAsync(string url, TournamentType type)
+		public async Task<TournamentInfo> GetTournamentAsync(string url, TournamentType type)
         {
             var tournamentId = url.Split('/').Last();
 
@@ -28,5 +28,26 @@ namespace Skak.Discord.Services
             var info = TournamentInfo.FromLichess(lichessTournament);
             return info;
         }
+
+		public async Task<TournamentInfo> GetLastTournamentAsync()
+		{
+			// TODO: Add database and save multiple teams
+			var teamId = "chessclub-brpt";
+
+			// Get last swiss and last arena
+			var swissTask = _lichessClient.GetTeamLastSwissAsync(teamId);
+			var arenaTask = _lichessClient.GetTeamLastArenaAsync(teamId);
+
+			await Task.WhenAll(swissTask, arenaTask);
+
+			var swiss = swissTask.Result;
+			var arena = arenaTask.Result;
+
+			// Proceed with most recent
+			var mostRecent = swiss.StartsAt > arena.StartsAt ? swiss : arena as ILichessTournament;
+			
+			var info = TournamentInfo.FromLichess(mostRecent);
+			return info;
+		}
     }
 }
