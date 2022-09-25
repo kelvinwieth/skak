@@ -1,2 +1,2 @@
 #!/bin/sh
-docker build -t skak ~/skak
+docker build -t skak:latest ~/skak
