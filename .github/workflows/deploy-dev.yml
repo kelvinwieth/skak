@@ -1,4 +1,4 @@
-name: 🚀 Deploy
+name: 🚀 Deploy on DEV environment
 
 on:
   push:
@@ -19,7 +19,7 @@ jobs:
       env:
         LOCAL: ${{ github.event.repository.name }}
         REMOTE: ${{ github.event.repository.html_url }}.git
-        BOT_TOKEN: ${{ secrets.PROD_BOT_TOKEN }}
+        BOT_TOKEN: ${{ secrets.DEV_BOT_TOKEN }}
       with:
         host: $HOST
         username: $USERNAME

@@ -1,0 +1,34 @@
+name: 🎉 Deploy release on PROD environment
+
+on:
+  release:
+    types: [ created ]
+
+env:
+  HOST: ${{ secrets.PROD_REMOTE_HOST }}
+  USERNAME: ${{ secrets.PROD_REMOTE_USER }}
+  SSH_KEY: ${{ secrets.PROD_SERVER_SSH_KEY }}
+
+jobs:
+  deploy:
+    name: Deploy with SSH
+    runs-on: ubuntu-latest
+    steps:
+    - name: Pull, build and run project
+      uses: appleboy/ssh-action@v0.1.5
+      env:
+        LOCAL: ${{ github.event.repository.name }}
+        REMOTE: ${{ github.event.repository.html_url }}.git
+        BOT_TOKEN: ${{ secrets.PROD_BOT_TOKEN }}
+      with:
+        host: $HOST
+        username: $USERNAME
+        key: $SSH_KEY
+        envs: LOCAL,REMOTE,BOT_TOKEN
+        script_stop: true
+        script: |
+          if [ -d $LOCAL/.git ]; then git -C $LOCAL reset --hard HEAD~; git -C $LOCAL pull; else rm -rf $LOCAL; git clone $REMOTE; fi
+          chmod +x -R $LOCAL/scripts
+          $LOCAL/scripts/build.sh
+          export SKAK_TOKEN=$BOT_TOKEN
+          $LOCAL/scripts/run.sh
