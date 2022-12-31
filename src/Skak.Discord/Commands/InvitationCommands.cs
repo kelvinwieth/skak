@@ -9,7 +9,7 @@ namespace Skak.Discord.Commands
     [SlashRequirePermissions(Permissions.ManageRoles)]
 	public class InvitationCommands : ApplicationCommandModule
 	{
-        [SlashCommand("/invite", "Envia um convite para um torneio.")]
+        [SlashCommand("invite", "Envia um convite para um torneio.")]
         public static async Task InviteAsync(InteractionContext context)
 		{
 			await context.DeferAsync();
