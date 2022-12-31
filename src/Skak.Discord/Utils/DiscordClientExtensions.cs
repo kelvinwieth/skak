@@ -23,6 +23,7 @@ namespace Skak.Discord.Utils
             // Add new command modules here
             slash.RegisterCommands<HealthCommands>();
             slash.RegisterCommands<PodiumCommands>();
+            slash.RegisterCommands<InvitationCommands>();
 
             return slash;
         }
