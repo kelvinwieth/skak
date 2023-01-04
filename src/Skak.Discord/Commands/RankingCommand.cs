@@ -40,8 +40,10 @@ namespace Skak.Discord.Commands
                     members.Add(member);
                 }
 
+
                 var embed = EmbedBuilder.Ranking(members);
-                await context.Channel.SendMessageAsync(embed);
+                var webhook = new DiscordWebhookBuilder().AddEmbed(embed);
+                await context.EditResponseAsync(webhook);
             }
             catch (Exception ex)
             {
