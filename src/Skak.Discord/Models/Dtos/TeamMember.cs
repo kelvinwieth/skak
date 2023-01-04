@@ -9,9 +9,13 @@ namespace Skak.Discord.Models.Dtos
 
         public Performances Perfs { get; set; } = new();
 
-        public int BlitzRating => Perfs.Blitz.Rating;
+        private Performance Blitz => Perfs.Blitz;
 
-        public int RapidRating => Perfs.Rapid.Rating;
+        private Performance Rapid => Perfs.Rapid;
+
+        public int BlitzRating => Blitz.Prov ? 0 : Blitz.Rating;
+
+        public int RapidRating => Rapid.Prov ? 0 : Rapid.Rating;
 
         public int HighestRating => BlitzRating > RapidRating ? BlitzRating : RapidRating;
     }
