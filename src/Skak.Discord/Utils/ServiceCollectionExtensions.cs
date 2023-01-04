@@ -13,6 +13,10 @@ namespace Skak.Discord.Utils
             // Add new services here
             services.AddRefitClients();
             services.AddTransient<IChessWebsiteService, LichessService>();
+            services.AddHttpClient("lichess", c =>
+            {
+                c.BaseAddress = new Uri(ConfigurationManager.Lichess.BaseUrl);
+            });
 
             return services;
         }
