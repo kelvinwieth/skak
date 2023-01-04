@@ -24,8 +24,8 @@ namespace Skak.Discord.Commands
 		{
             await context.DeferAsync();
 
-            const string url = "/team/chessclub-brpt/users";
-			var client = _factory.CreateClient("lichess");
+			using var client = _factory.CreateClient();
+            const string url = "https://lichess.org/api/team/chessclub-brpt/users";
 
 			try
 			{
