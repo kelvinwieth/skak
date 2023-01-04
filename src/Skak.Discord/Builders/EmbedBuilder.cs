@@ -1,5 +1,7 @@
+using System;
 using DSharpPlus.Entities;
 using Skak.Discord.Models;
+using Skak.Discord.Models.Dtos;
 
 namespace Skak.Discord.Builders
 {
@@ -46,6 +48,31 @@ namespace Skak.Discord.Builders
                 Title = "Oops...",
                 Description = $"Um erro aconteceu: {exception.Message}",
             };
+        }
+
+        public static DiscordEmbed Ranking(List<TeamMember> members)
+        {
+            var ranking = members
+                .OrderByDescending(m => m.HighestRating)
+                .Take(50)
+                .Select((m, i) => RankingLine(m, i));
+
+            var date = DateTime.UtcNow;
+
+            return new DiscordEmbedBuilder
+            {
+                Title = ":medal: **Top 50 Jogadores do Servidor** :medal:",
+                Description = string.Join("\n", ranking),
+                Footer = new DiscordEmbedBuilder.EmbedFooter
+                {
+                    Text = $"Atualizado em {date:dd/MM/yyyy}",
+                },
+            };
+        }
+
+        private static string RankingLine(TeamMember member, int position)
+        {
+            return $"** {position} ** - {member.Username} ({member.HighestRating})";
         }
     }
 }
