@@ -2,6 +2,7 @@ using System;
 using DSharpPlus.Entities;
 using Skak.Discord.Models;
 using Skak.Discord.Models.Dtos;
+using static DSharpPlus.Entities.DiscordEmbedBuilder;
 
 namespace Skak.Discord.Builders
 {
@@ -61,9 +62,9 @@ namespace Skak.Discord.Builders
 
             return new DiscordEmbedBuilder
             {
-                Title = ":crown: Top 100 Jogadores do Servidor :crown:",
+                Title = "Top 100 Jogadores",
                 Description = string.Join("\n", ranking),
-                Footer = new DiscordEmbedBuilder.EmbedFooter
+                Footer = new EmbedFooter
                 {
                     Text = $"Atualizado em {date:dd/MM/yyyy}",
                 },
@@ -72,7 +73,8 @@ namespace Skak.Discord.Builders
 
         private static string RankingLine(TeamMember member, int position)
         {
-            return $"** {position} ** - {member.Username} ({member.HighestRating})";
+            var name = $"[{member.Username}](https://lichess.org/@/{member.Username})"; 
+            return $"** {position}º ** - {name} ({member.HighestRating})";
         }
     }
 }
