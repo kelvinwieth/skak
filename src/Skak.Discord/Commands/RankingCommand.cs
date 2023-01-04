@@ -41,8 +41,12 @@ namespace Skak.Discord.Commands
                 }
 
 
-                var embed = EmbedBuilder.Ranking(members);
-                var webhook = new DiscordWebhookBuilder().AddEmbed(embed);
+                var (firstPart, secondPart) = EmbedBuilder.Ranking(members);
+
+                var webhook = new DiscordWebhookBuilder()
+                    .AddEmbed(firstPart)
+                    .AddEmbed(secondPart);
+
                 await context.EditResponseAsync(webhook);
             }
             catch (Exception ex)

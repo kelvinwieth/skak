@@ -51,24 +51,34 @@ namespace Skak.Discord.Builders
             };
         }
 
-        public static DiscordEmbed Ranking(List<TeamMember> members)
+        public static (DiscordEmbed firstPart, DiscordEmbed secondPart) Ranking(List<TeamMember> members)
         {
             var ranking = members
                 .OrderByDescending(m => m.HighestRating)
                 .Take(100)
                 .Select((m, i) => RankingLine(m, i + 1));
 
+            var first50 = ranking.Take(50);
+            var second50 = ranking.Skip(50).Take(50);
+
             var date = DateTime.UtcNow;
 
-            return new DiscordEmbedBuilder
+            var firstPart =  new DiscordEmbedBuilder
             {
                 Title = "Top 100 Jogadores",
-                Description = string.Join("\n", ranking),
+                Description = string.Join("\n", first50),
+            };
+
+            var secondPart = new DiscordEmbedBuilder
+            {
+                Description = string.Join("\n", second50),
                 Footer = new EmbedFooter
                 {
                     Text = $"Atualizado em {date:dd/MM/yyyy}",
                 },
             };
+
+            return (firstPart, secondPart);
         }
 
         private static string RankingLine(TeamMember member, int position)
