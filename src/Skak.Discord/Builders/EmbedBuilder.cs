@@ -54,14 +54,14 @@ namespace Skak.Discord.Builders
         {
             var ranking = members
                 .OrderByDescending(m => m.HighestRating)
-                .Take(50)
-                .Select((m, i) => RankingLine(m, i));
+                .Take(100)
+                .Select((m, i) => RankingLine(m, i + 1));
 
             var date = DateTime.UtcNow;
 
             return new DiscordEmbedBuilder
             {
-                Title = ":medal: **Top 50 Jogadores do Servidor** :medal:",
+                Title = ":crown: Top 100 Jogadores do Servidor :crown:",
                 Description = string.Join("\n", ranking),
                 Footer = new DiscordEmbedBuilder.EmbedFooter
                 {
