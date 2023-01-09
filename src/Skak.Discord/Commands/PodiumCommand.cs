@@ -1,28 +1,26 @@
 using DSharpPlus;
 using DSharpPlus.Entities;
-using DSharpPlus.Interactivity.Extensions;
 using DSharpPlus.SlashCommands;
 using DSharpPlus.SlashCommands.Attributes;
 using Skak.Discord.Builders;
-using Skak.Discord.Models.Enums;
-using Skak.Discord.Services;
+using Skak.Discord.Clients;
+using Skak.Discord.Models;
 
 namespace Skak.Discord.Commands
 {
     [SlashRequirePermissions(Permissions.ManageRoles)]
     public class PodiumCommands : ApplicationCommandModule
     {
-        private readonly IChessWebsiteService _chessService;
+        private readonly ILichessClient _lichessClient;
 
-        public PodiumCommands(IChessWebsiteService chessWebsiteService)
+        public PodiumCommands(ILichessClient lichessClient)
         {
-            _chessService = chessWebsiteService;
+            _lichessClient = lichessClient;
         }
 
         [SlashCommand("podio", "Envia o pódio de um torneio finalizado.")]
         public async Task PostPodiumAsync(
             InteractionContext context,
-            [Option("canal", "Canal onde a mensagem será enviada")] DiscordChannel channel,
             [Option("imagem", "Link da imagem a ser enviada")] string imageUrl,
             [Option("campeao", "Membro campeão do torneio")] DiscordUser firstPlace,
             [Option("vice", "Membro vice-campeão do torneio")] DiscordUser secondPlace,
@@ -32,10 +30,14 @@ namespace Skak.Discord.Commands
 
             try
             {
-                // Get tournament info on Lichess
-                var tournamentInfo = await _chessService.GetLastTournamentAsync();
+                var tournament = await _lichessClient.GetLastFinishedTournamentAsync();
 
-                // Build embed
+                if (tournament == null)
+                {
+                    throw new ArgumentException("No tournament found");
+                }
+
+                var tournamentInfo = TournamentInfo.FromLichess(tournament);
                 var embed = EmbedBuilder.TournamentPodium(
                     tournamentInfo,
                     imageUrl,
@@ -43,43 +45,8 @@ namespace Skak.Discord.Commands
                     secondPlace,
                     thirdPlace);
 
-                // Send confirmation message
-                var webhook = new DiscordWebhookBuilder();
-                var buttons = new DiscordComponent[]
-                {
-                    new DiscordButtonComponent(ButtonStyle.Success, "send", "Enviar"),
-                    new DiscordButtonComponent(ButtonStyle.Danger, "cancel", "Cancelar"),
-                };
-
-                webhook.WithContent($"Esta é uma prévia da mensagem a ser enviada no canal <#{channel.Id}>:\n");
-                webhook.AddEmbed(embed);
-                webhook.AddComponents(buttons);
-
-                var message = await context.EditResponseAsync(webhook);
-                var result = await message.WaitForButtonAsync();
-
-                webhook.Clear();
-                webhook.ClearComponents();
-
-                if (result.TimedOut)
-                {
-                    throw new TimeoutException("Timeout excedido.");
-                }
-
-                var userAction = result.Result.Id;
-
-                // If confirmed, send podium
-                if (userAction == "send")
-                {
-                    await channel.SendMessageAsync(embed);
-                    webhook.WithContent($"Pódio enviado com sucesso em <#{channel.Id}>!");
-                    await context.EditResponseAsync(webhook);
-                }
-                else
-                {
-                    webhook.WithContent($"Ação cancelada.");
-                    await context.EditResponseAsync(webhook);
-                }
+                await context.Channel.SendMessageAsync(embed);
+                await context.DeleteResponseAsync();
             }
             catch (Exception ex)
             {
