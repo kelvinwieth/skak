@@ -4,7 +4,6 @@ using DSharpPlus.SlashCommands;
 using DSharpPlus.SlashCommands.Attributes;
 using Ndjson.AsyncStreams.Net.Http;
 using Skak.Discord.Builders;
-using Skak.Discord.Clients;
 using Skak.Discord.Models.Dtos;
 
 namespace Skak.Discord.Commands

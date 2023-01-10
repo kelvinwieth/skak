@@ -7,8 +7,8 @@ namespace Skak.Discord.Configuration
         public static class Discord
         {
             private static string BotToken =>
-            	Environment.GetEnvironmentVariable("SKAK_TOKEN") ??
-            	throw new ArgumentException("Missing SKAK_TOKEN variable");
+                Environment.GetEnvironmentVariable("SKAK_TOKEN") ??
+                throw new ArgumentException("Missing SKAK_TOKEN variable");
 
             public static DiscordConfiguration BotConfiguration => new()
             {

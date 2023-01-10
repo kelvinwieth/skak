@@ -1,4 +1,3 @@
-using System.Threading.Channels;
 using DSharpPlus;
 using DSharpPlus.Entities;
 using DSharpPlus.SlashCommands;

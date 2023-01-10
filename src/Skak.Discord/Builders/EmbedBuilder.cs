@@ -1,4 +1,3 @@
-using System;
 using DSharpPlus.Entities;
 using Skak.Discord.Models;
 using Skak.Discord.Models.Dtos;
