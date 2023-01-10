@@ -12,7 +12,7 @@ namespace Skak.Discord.Models
             return new TournamentInfo
             {
                 Name = tournament.Name,
-                StartsAt = tournament.StartsAt,
+                StartsAt = tournament.StartDate,
                 Url = $"https://lichess.org/{type}/{tournament.Id}",
             };
         }
