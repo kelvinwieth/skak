@@ -28,7 +28,7 @@ namespace Skak.Discord.Clients
             var swiss = swissTask.Result;
             var arena = arenaTask.Result;
 
-            return swiss?.StartsAt > arena?.StartsAt ? swiss : arena;
+            return swiss?.StartDate > arena?.StartDate ? swiss : arena;
         }
 
         public async Task<ILichessTournament?> GetLastFinishedTournamentAsync(TournamentType tournamentType)
@@ -43,8 +43,8 @@ namespace Skak.Discord.Clients
 
             IAsyncEnumerable<ILichessTournament> stream =
                 tournamentType == TournamentType.Swiss ?
-                response.Content.ReadFromNdjsonAsync<LichessSwissTournament>() :
-                response.Content.ReadFromNdjsonAsync<LichessArenaTournament>();
+                response.Content.ReadFromNdjsonAsync<LichessTeamSwiss>() :
+                response.Content.ReadFromNdjsonAsync<LichessTeamArena>();
 
             await foreach (var tournament in stream)
             {
@@ -58,7 +58,7 @@ namespace Skak.Discord.Clients
 
             return tournaments
                 .Where(t => t.IsFinished)
-                .MaxBy(t => t.StartsAt);
+                .MaxBy(t => t.StartDate);
         }
     }
 }
