@@ -1,6 +1,7 @@
 using DSharpPlus.Entities;
 using Skak.Discord.Models;
 using Skak.Discord.Models.Dtos;
+using Skak.Discord.Utils;
 using static DSharpPlus.Entities.DiscordEmbedBuilder;
 
 namespace Skak.Discord.Builders
@@ -84,6 +85,31 @@ namespace Skak.Discord.Builders
         {
             var name = $"[{member.Username}](https://lichess.org/@/{member.Username})"; 
             return $"** {position}º ** - {name} ({member.HighestRating})";
+        }
+
+        public static DiscordEmbed Invite(ILichessTournament? tournament)
+        {
+            // If tournament is null, return tournament not found
+            if (tournament == null)
+            {
+                return new DiscordEmbedBuilder().WithDescription("Torneio não encontrado.");
+            }
+
+            var brasiliaDate = tournament.StartDate.ToBrasilia();
+            var lisboaDate = tournament.StartDate.ToLisboa();
+
+            return new DiscordEmbedBuilder()
+            {
+                Title = $":trophy: {tournament.Name}",
+                Description =
+                    $"**Link:** {tournament.Url}\n" +
+                    $"**Instruções para entrar:** <#825136910807728138>\n\n" +
+                    $"📆 **Data:** {brasiliaDate:dd/MM/yyyy}\n" +
+                    $"⌚ **Horário:** {brasiliaDate:HH:mm}h (BRA) - {lisboaDate:HH:mm}h (POR)\n" +
+                    $"📋 **Formato:** {tournament.Format}\n" +
+                    $"⌛ **Ritmo de Jogo:** {tournament.TimeControl}",
+                ImageUrl = "https://i.imgur.com/sLxTHD3.png",
+            };
         }
     }
 }
