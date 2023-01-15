@@ -13,5 +13,11 @@ namespace Skak.Discord.Models.Dtos
         bool IsFinished { get; }
 
 		TournamentType Type { get; }
+
+        string Url { get; }
+
+        string Format { get; }
+
+        string TimeControl { get; }
     }
 }

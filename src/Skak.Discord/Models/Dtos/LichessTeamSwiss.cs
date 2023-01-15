@@ -13,6 +13,8 @@ namespace Skak.Discord.Models.Dtos
 
         public string Status { get; set; } = string.Empty;
 
+        public Clock Clock { get; set; } = new();
+
         // Computed fields
         // Dont ask me, Lichess API is a mess
         public DateTime StartDate => StartsAt;
@@ -20,6 +22,12 @@ namespace Skak.Discord.Models.Dtos
         public bool IsFinished => Status == "finished";
 
 		public TournamentType Type => TournamentType.Swiss;
+
+        public string Url => $"https://lichess.org/swiss/{Id}";
+
+        public string Format => "Suíço";
+
+        public string TimeControl => $"{Clock.Limit / 60} min + {Clock.Increment} seg";
     }
 }
 
