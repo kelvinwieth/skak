@@ -100,13 +100,13 @@ namespace Skak.Discord.Builders
 
             return new DiscordEmbedBuilder()
             {
-                Title = $":trophy: {tournament.Name}",
+                Title = $":trophy: {tournament.Name} :trophy:",
                 Description =
                     $"**Link:** {tournament.Url}\n" +
                     $"**Instruções para entrar:** <#825136910807728138>\n\n" +
                     $"📆 **Data:** {brasiliaDate:dd/MM/yyyy}\n" +
                     $"⌚ **Horário:** {brasiliaDate:HH:mm}h (BRA) - {lisboaDate:HH:mm}h (POR)\n" +
-                    $"📋 **Formato:** {tournament.Format}\n" +
+                    $"📋 **Formato:** {tournament.Format.ToUft8String()}\n" +
                     $"⌛ **Ritmo de Jogo:** {tournament.TimeControl}",
                 ImageUrl = "https://i.imgur.com/sLxTHD3.png",
             };
