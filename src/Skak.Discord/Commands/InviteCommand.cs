@@ -15,7 +15,9 @@ namespace Skak.Discord.Commands
         public InviteCommand(ILichessClient client) => _client = client;
 
         [SlashCommand("invite", "Envia um convite para o primeiro torneio não finalizado")]
-        public async Task InviteAsync(InteractionContext context)
+        public async Task InviteAsync(
+            InteractionContext context,
+            [Option("mention", "Menção a ser usada no convite")] DiscordRole role)
 		{
 			await context.DeferAsync();
             var webhook = new DiscordWebhookBuilder();
@@ -43,6 +45,12 @@ namespace Skak.Discord.Commands
                 webhook.AddEmbed(embed);
             }
 
+            // IDK why, but @everyone mention is returning @@everyone
+            // So we need this workaround
+            var mention = role.Id == context.Guild.EveryoneRole.Id ?
+                "@everyone" : role.Mention;
+
+            await context.Channel.SendMessageAsync($"{mention}");
             await context.EditResponseAsync(webhook);
         }
     }
