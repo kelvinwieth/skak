@@ -1,6 +1,7 @@
 using DSharpPlus.Entities;
 using Skak.Discord.Models;
 using Skak.Discord.Models.Dtos;
+using System;
 using static DSharpPlus.Entities.DiscordEmbedBuilder;
 
 namespace Skak.Discord.Builders
@@ -84,6 +85,34 @@ namespace Skak.Discord.Builders
         {
             var name = $"[{member.Username}](https://lichess.org/@/{member.Username})"; 
             return $"** {position}º ** - {name} ({member.HighestRating})";
+        }
+
+        public static DiscordEmbed Invite(ILichessTournament? tournament)
+        {
+            // If tournament is null, return tournament not found
+            if (tournament == null)
+            {
+                return new DiscordEmbedBuilder().WithDescription("Torneio não encontrado.");
+            }
+
+            return new DiscordEmbedBuilder()
+            {
+                Title = tournament.Name,
+                Description = 
+                    $"Data: {tournament.StartDate:dd/MM/yyyy}" +
+                    $"Horário: {tournament.StartDate:HH:mm}",
+            };
+
+
+            // - Link do Torneio: https://lichess.org/swiss/KdDTcemA
+            // - Link da Equipe: https://lichess.org/team/chessclub-brpt
+            // 📆 Data: 14 / 01 / 2023
+            // ⌚ Horário: 18:30h(Brasília, BRA) / 22:30h(Lisboa, POR)
+            // 📋 Formato: Suíço
+            // ⌛ Ritmo de jogo: 3 min + 2 segs
+            // ♟️ Tema: Padrão
+            // - Instruções de como entrar na  equipe em 📅│programação
+            // - Caso precise de ajuda, envie mensagem no 📢│suporte
         }
     }
 }

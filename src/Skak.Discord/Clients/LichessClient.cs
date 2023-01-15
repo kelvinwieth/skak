@@ -7,17 +7,17 @@ namespace Skak.Discord.Clients
     public interface ILichessClient
     {
         Task<ILichessTournament?> GetLastFinishedTournamentAsync();
+
+        Task<List<ILichessTournament>> GetLastTournamentsAsync(int quantity);
     }
 
     public class LichessClient : ILichessClient
     {
         private readonly IHttpClientFactory _factory;
 
-        public LichessClient(IHttpClientFactory factory)
-        {
-            _factory = factory;
-        }
+        public LichessClient(IHttpClientFactory factory) => _factory = factory;
 
+        // TODO: Remove this ugly method and use GetLastTournamentsAsync instead
         public async Task<ILichessTournament?> GetLastFinishedTournamentAsync()
         {
             var swissTask = GetLastFinishedTournamentAsync(TournamentType.Swiss);
@@ -31,6 +31,7 @@ namespace Skak.Discord.Clients
             return swiss?.StartDate > arena?.StartDate ? swiss : arena;
         }
 
+        // TODO: Remove this ugly method and use GetLastTournamentsAsync instead
         public async Task<ILichessTournament?> GetLastFinishedTournamentAsync(TournamentType tournamentType)
         {
             var client = _factory.CreateClient();
@@ -59,6 +60,59 @@ namespace Skak.Discord.Clients
             return tournaments
                 .Where(t => t.IsFinished)
                 .MaxBy(t => t.StartDate);
+        }
+
+        public async Task<List<ILichessTournament>> GetLastTournamentsAsync(int quantity)
+        {
+            var tournaments = new List<ILichessTournament>();
+
+            var swissTask = GetLastTournamentsAsync(TournamentType.Swiss, 20);
+            var arenaTask = GetLastTournamentsAsync(TournamentType.Arena, 20);
+
+            await Task.WhenAll(swissTask, arenaTask);
+
+            var swissTournaments = swissTask.Result;
+            var arenaTournaments = arenaTask.Result;
+
+            tournaments.AddRange(swissTournaments);
+            tournaments.AddRange(arenaTournaments);
+
+            return tournaments
+                .OrderByDescending(t => t.StartDate)
+                .Take(quantity)
+                .ToList();
+        }
+
+        public async Task<List<ILichessTournament>> GetLastTournamentsAsync(
+            TournamentType tournamentType,
+            int quantity)
+        {
+            var client = _factory.CreateClient();
+
+            var route = LichessRoutes.TeamTournaments(tournamentType, quantity);
+
+            var response = await client.GetAsync(route);
+            response.EnsureSuccessStatusCode();
+
+            var tournaments = new List<ILichessTournament>();
+
+            var stream = 
+                tournamentType == TournamentType.Swiss ?
+                response.Content.ReadFromNdjsonAsync<LichessTeamSwiss>() :
+                response.Content.ReadFromNdjsonAsync<LichessTeamArena>()
+                as IAsyncEnumerable<ILichessTournament>;
+
+            await foreach (var tournament in stream)
+            {
+                if (tournament == null)
+                {
+                    continue;
+                }
+
+                tournaments.Add(tournament);
+            }
+
+            return tournaments;
         }
     }
 }
