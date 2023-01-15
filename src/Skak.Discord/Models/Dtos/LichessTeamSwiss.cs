@@ -25,7 +25,7 @@ namespace Skak.Discord.Models.Dtos
 
         public string Url => $"https://lichess.org/swiss/{Id}";
 
-        public string Format => "Suíço";
+        public string Format => "Swiss";
 
         public string TimeControl => $"{Clock.Limit / 60} min + {Clock.Increment} seg";
     }
