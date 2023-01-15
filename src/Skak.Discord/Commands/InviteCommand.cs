@@ -20,19 +20,29 @@ namespace Skak.Discord.Commands
 			await context.DeferAsync();
             var webhook = new DiscordWebhookBuilder();
 
-            // Get last 20 tournaments
-            var tournaments = await _client.GetLastTournamentsAsync(quantity: 20);
+            try
+            {
+                // Get last 20 tournaments
+                var tournaments = await _client.GetLastTournamentsAsync(quantity: 20);
 
-            // Filter by not finished, and take by the min date
-            var firstNotFinished = tournaments
-                .Where(t => !t.IsFinished)
-                .MinBy(t => t.StartDate);
+                // Filter by not finished, and take by the min date
+                var firstNotFinished = tournaments
+                    .Where(t => !t.IsFinished)
+                    .MinBy(t => t.StartDate);
 
-            // Build invite embed
-            var embed = EmbedBuilder.Invite(firstNotFinished);
+                // Build invite embed
+                var embed = EmbedBuilder.Invite(firstNotFinished);
 
-            // Return embed
-            webhook.AddEmbed(embed);
+                // Return embed
+                webhook.AddEmbed(embed);
+            }
+            catch (Exception ex)
+            {
+                var embed = EmbedBuilder.Exception(ex);
+                webhook.ClearComponents();
+                webhook.AddEmbed(embed);
+            }
+
             await context.EditResponseAsync(webhook);
         }
     }
