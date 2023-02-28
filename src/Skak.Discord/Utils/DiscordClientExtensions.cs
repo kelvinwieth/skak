@@ -2,6 +2,7 @@ using DSharpPlus;
 using DSharpPlus.Interactivity.Extensions;
 using DSharpPlus.SlashCommands;
 using Skak.Discord.Commands;
+using Skak.Discord.Handlers;
 
 namespace Skak.Discord.Utils
 {
@@ -14,7 +15,10 @@ namespace Skak.Discord.Utils
             var slash = client.UseSlashCommands(slashConfiguration);
             slash.RegisterCommands();
 
-            client.UseInteractivity();
+            client
+                .AddMessageHandlers()
+                .UseInteractivity();
+
             return client;
         }
 
@@ -27,6 +31,12 @@ namespace Skak.Discord.Utils
             slash.RegisterCommands<RankingCommand>();
 
             return slash;
+        }
+
+        private static DiscordClient AddMessageHandlers(this DiscordClient client)
+        {
+            client.MessageCreated += LichessChallengeHandler.Handle;
+            return client;
         }
     }
 }
