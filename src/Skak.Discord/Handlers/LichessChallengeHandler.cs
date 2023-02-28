@@ -34,7 +34,10 @@ namespace Skak.Discord.Handlers
                 if (title.Contains("Challenge from Anonymous"))
                 {
                     await args.Message.DeleteAsync();
-                    await args.Channel.SendMessageAsync("Não é permitido o envio de convites anônimos!");
+                    await args.Channel.SendMessageAsync(
+                        $"Ei {args.Author.Mention}, não é permitido o envio de convites anônimos! " +
+                        $"Se você quer desafiar outras pessoas, crie uma conta no Lichess. " +
+                        $"Dessa forma, diminuímos a quantidade de cheaters em nosso servidor.");
                 }
             }
         }
