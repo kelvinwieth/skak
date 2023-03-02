@@ -29,6 +29,7 @@ namespace Skak.Discord.Utils
             slash.RegisterCommands<PodiumCommands>();
             slash.RegisterCommands<InviteCommand>();
             slash.RegisterCommands<RankingCommand>();
+            slash.RegisterCommands<MonthlyRankingCommand>();
 
             return slash;
         }
