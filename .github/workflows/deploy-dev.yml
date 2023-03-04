@@ -19,6 +19,7 @@ jobs:
       env:
         LOCAL: ${{ github.event.repository.name }}
         REMOTE: ${{ github.event.repository.html_url }}.git
+        COMMIT_SHA: ${{ github.sha }}
         BOT_TOKEN: ${{ secrets.DEV_BOT_TOKEN }}
       with:
         host: $HOST
@@ -28,6 +29,7 @@ jobs:
         script_stop: true
         script: |
           if [ -d $LOCAL/.git ]; then git -C $LOCAL reset --hard HEAD~; git -C $LOCAL pull; else rm -rf $LOCAL; git clone $REMOTE; fi
+          git checkout $COMMIT_SHA
           chmod +x -R $LOCAL/scripts
           $LOCAL/scripts/build.sh
           export SKAK_TOKEN=$BOT_TOKEN
