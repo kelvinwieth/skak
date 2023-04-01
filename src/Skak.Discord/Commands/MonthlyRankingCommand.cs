@@ -47,7 +47,7 @@ namespace Skak.Discord.Commands
                 var now = DateTime.UtcNow.ToBrasilia();
                 var daysInMonth = DateTime.DaysInMonth(now.Year, now.Month);
                 var startDate = new DateTime(now.Year, now.Month, 1);
-                var finalDate = new DateTime(now.Year, now.Month, daysInMonth);
+                var finalDate = new DateTime(now.Year, now.Month, daysInMonth, 23, 59, 59);
 
                 var monthTournaments = tournaments
                     .Where(
