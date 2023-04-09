@@ -21,10 +21,11 @@ namespace Skak.Discord.Commands
         [SlashCommand("podio", "Envia o pódio de um torneio finalizado.")]
         public async Task PostPodiumAsync(
             InteractionContext context,
+            [Option("canal", "Canal onde o pódio será enviado")] DiscordChannel channel,
             [Option("imagem", "Link da imagem a ser enviada")] string imageUrl,
-            [Option("campeao", "Membro campeão do torneio")] DiscordUser firstPlace,
-            [Option("vice", "Membro vice-campeão do torneio")] DiscordUser secondPlace,
-            [Option("terceiro", "Membro terceiro colocado do torneio")] DiscordUser thirdPlace)
+            [Option("campeao", "Membro campeão do torneio")] DiscordUser firstPlace = null,
+            [Option("vice", "Membro vice-campeão do torneio")] DiscordUser secondPlace = null,
+            [Option("terceiro", "Membro terceiro colocado do torneio")] DiscordUser thirdPlace = null)
         {
             await context.DeferAsync();
 
@@ -45,8 +46,13 @@ namespace Skak.Discord.Commands
                     secondPlace,
                     thirdPlace);
 
-                await context.Channel.SendMessageAsync(embed);
-                await context.DeleteResponseAsync();
+                var feedback = new DiscordWebhookBuilder
+                {
+                    Content = $"Pódio enviado com sucesso em {channel.Mention}!",
+                };
+
+                await context.EditResponseAsync(feedback);
+                await channel.SendMessageAsync(embed);
             }
             catch (Exception ex)
             {
