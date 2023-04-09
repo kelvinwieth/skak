@@ -5,7 +5,6 @@ using DSharpPlus.SlashCommands.Attributes;
 using Skak.Discord.Builders;
 using Skak.Discord.Clients;
 using Skak.Discord.Models;
-using System.Runtime.InteropServices;
 
 namespace Skak.Discord.Commands
 {
