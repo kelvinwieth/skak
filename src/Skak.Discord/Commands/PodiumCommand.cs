@@ -38,13 +38,16 @@ namespace Skak.Discord.Commands
                     throw new ArgumentException("No tournament found");
                 }
 
+                var result = await _lichessClient.GetSwissResultAsync(tournament.Id, maxPlayers: 3);
+
                 var tournamentInfo = TournamentInfo.FromLichess(tournament);
                 var embed = EmbedBuilder.TournamentPodium(
                     tournamentInfo,
                     imageUrl,
                     firstPlace,
                     secondPlace,
-                    thirdPlace);
+                    thirdPlace,
+                    result);
 
                 var feedback = new DiscordWebhookBuilder
                 {
