@@ -30,7 +30,7 @@ namespace Skak.Discord.Clients
 
         public static string SwissResult(string tournamentId, int maxPlayers)
         {
-            return $"{BaseUrl}/swiss/{tournamentId}/{maxPlayers}";
+            return $"{BaseUrl}/swiss/{tournamentId}/results?nb={maxPlayers}";
         }
     }
 }
