@@ -22,7 +22,7 @@ namespace Skak.Discord.Commands
         public async Task PostPodiumAsync(
             InteractionContext context,
             [Option("canal", "Canal onde o pódio será enviado")] DiscordChannel channel,
-            [Option("imagem", "Link da imagem a ser enviada")] string imageUrl,
+            [Option("imagem", "Link da imagem a ser enviada")] string imageUrl = null,
             [Option("campeao", "Membro campeão do torneio")] DiscordUser firstPlace = null,
             [Option("vice", "Membro vice-campeão do torneio")] DiscordUser secondPlace = null,
             [Option("terceiro", "Membro terceiro colocado do torneio")] DiscordUser thirdPlace = null)

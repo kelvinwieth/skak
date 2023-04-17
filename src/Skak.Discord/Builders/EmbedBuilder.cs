@@ -11,9 +11,9 @@ namespace Skak.Discord.Builders
         public static DiscordEmbed TournamentPodium(
             TournamentInfo tournament,
             string imageUrl,
-            DiscordUser? firstPlace,
-            DiscordUser? secondPlace,
-            DiscordUser? thirdPlace)
+            DiscordUser firstPlace,
+            DiscordUser secondPlace,
+            DiscordUser thirdPlace)
         {
             var firstLine = firstPlace != null ?
                 $":first_place: <@{firstPlace.Id}>\n" :
@@ -87,7 +87,7 @@ namespace Skak.Discord.Builders
             return $"** {position}º ** - {name} ({member.HighestRating})";
         }
 
-        public static DiscordEmbed Invite(ILichessTournament? tournament)
+        public static DiscordEmbed Invite(ILichessTournament tournament)
         {
             // If tournament is null, return tournament not found
             if (tournament == null)
