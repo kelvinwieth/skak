@@ -14,10 +14,10 @@ namespace Skak.Discord.Commands
 
         public InviteCommand(ILichessClient client) => _client = client;
 
-        [SlashCommand("invite", "Envia um convite para o primeiro torneio n„o finalizado")]
+        [SlashCommand("invite", "Envia um convite para o primeiro torneio n√£o finalizado")]
         public async Task InviteAsync(
             InteractionContext context,
-            [Option("mention", "MenÁ„o a ser usada no convite")] DiscordRole role)
+            [Option("mention", "Men√ß√£o a ser usada no convite")] DiscordRole role)
 		{
 			await context.DeferAsync();
             var webhook = new DiscordWebhookBuilder();
