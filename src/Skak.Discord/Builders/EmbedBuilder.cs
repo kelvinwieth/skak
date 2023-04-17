@@ -13,19 +13,20 @@ namespace Skak.Discord.Builders
             string imageUrl,
             DiscordUser firstPlace,
             DiscordUser secondPlace,
-            DiscordUser thirdPlace)
+            DiscordUser thirdPlace,
+            LichessSwissResult result)
         {
-            var firstLine = firstPlace != null ?
-                $":first_place: <@{firstPlace.Id}>\n" :
-                string.Empty;
+            var firstLine = firstPlace == null ?
+                result.Players.ElementAtOrDefault(0).Username :
+                $":first_place: <@{firstPlace.Id}>\n";
 
-            var secondLine = secondPlace != null ?
-                $":second_place: <@{secondPlace.Id}>\n" :
-                string.Empty;
+            var secondLine = secondPlace == null ?
+                result.Players.ElementAtOrDefault(1).Username :
+                $":second_place: <@{secondPlace.Id}>\n";
 
-            var thirdLine = thirdPlace != null ?
-                $":third_place: <@{thirdPlace.Id}>" :
-                string.Empty;
+            var thirdLine = thirdPlace == null ?
+                result.Players.ElementAtOrDefault(2).Username :
+                $":third_place: <@{thirdPlace.Id}>";
 
             return new DiscordEmbedBuilder
             {

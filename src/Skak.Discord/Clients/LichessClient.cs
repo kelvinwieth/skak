@@ -6,9 +6,11 @@ namespace Skak.Discord.Clients
 {
     public interface ILichessClient
     {
-        Task<ILichessTournament?> GetLastFinishedTournamentAsync();
+        Task<ILichessTournament> GetLastFinishedTournamentAsync();
 
         Task<List<ILichessTournament>> GetLastTournamentsAsync(int quantity);
+
+        Task<LichessSwissResult> GetSwissResultAsync(string tournamentId, int maxPlayers);
     }
 
     public class LichessClient : ILichessClient
@@ -18,7 +20,7 @@ namespace Skak.Discord.Clients
         public LichessClient(IHttpClientFactory factory) => _factory = factory;
 
         // TODO: Remove this ugly method and use GetLastTournamentsAsync instead
-        public async Task<ILichessTournament?> GetLastFinishedTournamentAsync()
+        public async Task<ILichessTournament> GetLastFinishedTournamentAsync()
         {
             var swissTask = GetLastFinishedTournamentAsync(TournamentType.Swiss);
             var arenaTask = GetLastFinishedTournamentAsync(TournamentType.Arena);
@@ -32,7 +34,7 @@ namespace Skak.Discord.Clients
         }
 
         // TODO: Remove this ugly method and use GetLastTournamentsAsync instead
-        public async Task<ILichessTournament?> GetLastFinishedTournamentAsync(TournamentType tournamentType)
+        public async Task<ILichessTournament> GetLastFinishedTournamentAsync(TournamentType tournamentType)
         {
             var client = _factory.CreateClient();
             var route = LichessRoutes.TeamTournaments(tournamentType, 20);
@@ -113,6 +115,30 @@ namespace Skak.Discord.Clients
             }
 
             return tournaments;
+        }
+
+        public async Task<LichessSwissResult> GetSwissResultAsync(string tournamentId, int maxPlayers)
+        {
+            using var client = _factory.CreateClient();
+
+            var url = LichessRoutes.SwissResult(tournamentId, maxPlayers);
+            var response = await client.GetAsync(url);
+            response.EnsureSuccessStatusCode();
+
+            var stream = response.Content.ReadFromNdjsonAsync<SwissPlayer>();
+            var result = new LichessSwissResult();
+
+            await foreach (var player in stream)
+            {
+                if (player == null)
+                {
+                    continue;
+                }
+
+                result.Players.Add(player);
+            }
+
+            return result;
         }
     }
 }

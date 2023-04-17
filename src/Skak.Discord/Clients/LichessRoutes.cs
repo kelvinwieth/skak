@@ -27,5 +27,10 @@ namespace Skak.Discord.Clients
                 _ => throw new ArgumentException("Unsupported tournament type"),
             };
         }
+
+        public static string SwissResult(string tournamentId, int maxPlayers)
+        {
+            return $"{BaseUrl}/swiss/{tournamentId}/results?nb={maxPlayers}";
+        }
     }
 }
