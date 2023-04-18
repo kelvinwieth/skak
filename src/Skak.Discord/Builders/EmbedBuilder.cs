@@ -1,3 +1,4 @@
+using System.Text;
 using DSharpPlus.Entities;
 using Skak.Discord.Models;
 using Skak.Discord.Models.Dtos;
@@ -8,6 +9,31 @@ namespace Skak.Discord.Builders
 {
     public class EmbedBuilder
     {
+        private static string GetPodiumLine(int position, DiscordUser user, LichessSwissResult result)
+        {
+            var builder = new StringBuilder();
+            builder.Append(GetPlaceEmoji(position));
+            
+            if (user == null)
+            {
+                var player = result.Players.ElementAtOrDefault(position - 1);
+
+                if (player == null)
+                {
+                    return string.Empty;
+                }
+
+                builder.Append($" {player.Username}");
+            }
+            else
+            {
+                builder.Append($" <@{user.Id}>");
+            }
+
+            builder.Append("\n");
+            return builder.ToString();
+        }
+
         public static DiscordEmbed TournamentPodium(
             TournamentInfo tournament,
             string imageUrl,
@@ -16,17 +42,9 @@ namespace Skak.Discord.Builders
             DiscordUser thirdPlace,
             LichessSwissResult result)
         {
-            var firstLine = firstPlace == null ?
-                result.Players.ElementAtOrDefault(0).Username :
-                $":first_place: <@{firstPlace.Id}>\n";
-
-            var secondLine = secondPlace == null ?
-                result.Players.ElementAtOrDefault(1).Username :
-                $":second_place: <@{secondPlace.Id}>\n";
-
-            var thirdLine = thirdPlace == null ?
-                result.Players.ElementAtOrDefault(2).Username :
-                $":third_place: <@{thirdPlace.Id}>";
+            var firstLine = GetPodiumLine(1, firstPlace, result);
+            var secondLine = GetPodiumLine(2, secondPlace, result);
+            var thirdLine = GetPodiumLine(3, thirdPlace, result);
 
             return new DiscordEmbedBuilder
             {
@@ -111,6 +129,21 @@ namespace Skak.Discord.Builders
                     $"⌛ **Ritmo de Jogo:** {tournament.TimeControl}",
                 ImageUrl = "https://i.imgur.com/sLxTHD3.png",
             };
+        }
+        
+        private static string GetPlaceEmoji(int position)
+        {
+            switch (position)
+            {
+                case 1:
+                    return ":first_place:";
+                case 2:
+                    return ":second_place:";
+                case 3:
+                    return ":third_place:";
+                default:
+                    return string.Empty;
+            }
         }
     }
 }
