@@ -13,7 +13,6 @@ namespace Skak.Discord.Builders
         {
             var builder = new StringBuilder();
             builder.Append(GetPlaceEmoji(position));
-
             
             if (user == null)
             {
